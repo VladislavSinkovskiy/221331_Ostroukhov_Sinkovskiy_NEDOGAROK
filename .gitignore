@@ -1,0 +1,12 @@
+# Kernel build artifacts
+.claude/
+*.o
+*.ko
+*.mod
+*.mod.c
+*.order
+*.symvers
+.*.cmd
+
+# Compiled userspace binary
+cryptfs-ctl
