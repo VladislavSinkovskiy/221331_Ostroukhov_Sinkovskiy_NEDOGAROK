@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * cryptfs: inode_operations для каталогов, файлов и символических ссылок.
  *

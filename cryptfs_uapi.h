@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _CRYPTFS_UAPI_H
 #define _CRYPTFS_UAPI_H
 
@@ -22,4 +21,4 @@ struct cryptfs_key {
 #define CRYPTFS_IOC_SETKEY    _IOW(CRYPTFS_IOC_MAGIC, 1, struct cryptfs_key)
 #define CRYPTFS_IOC_CLEARKEY  _IO(CRYPTFS_IOC_MAGIC, 2)
 
-#endif /* _CRYPTFS_UAPI_H */
+#endif

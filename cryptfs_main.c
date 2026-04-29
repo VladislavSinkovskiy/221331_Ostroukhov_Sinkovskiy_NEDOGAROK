@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * cryptfs: stackable filesystem with transparent AES-XTS encryption.
  *

@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * cryptfs: fs_context API, разбор опций, fill_super,
  * super_operations, dentry_operations.

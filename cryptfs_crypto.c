@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * cryptfs: обёртка над kernel crypto API (skcipher, xts(aes)).
  *

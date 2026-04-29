@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * cryptfs: misc-устройство /dev/cryptfs_ctl для управления ключом.
  */

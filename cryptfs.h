@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _CRYPTFS_H
 #define _CRYPTFS_H
 
