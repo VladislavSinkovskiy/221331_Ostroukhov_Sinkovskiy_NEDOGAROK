@@ -17,6 +17,18 @@
 
 #include "cryptfs.h"
 
+/* Шифруем только файлы с расширением .text. Остальные — passthrough. */
+static bool cryptfs_should_encrypt(struct file *file)
+{
+	const struct qstr *name = &file->f_path.dentry->d_name;
+	static const char ext[] = ".text";
+	const size_t elen = sizeof(ext) - 1;
+
+	if (name->len < elen)
+		return false;
+	return memcmp(name->name + name->len - elen, ext, elen) == 0;
+}
+
 /* ---------- общие: open/release/flush/fsync/llseek ---------- */
 
 static int cryptfs_open(struct inode *inode, struct file *file)
@@ -140,6 +152,18 @@ static ssize_t cryptfs_read_iter(struct kiocb *iocb, struct iov_iter *to)
 
 	lower_inode = CRYPTFS_I(upper_inode)->lower_inode;
 
+	if (!cryptfs_should_encrypt(upper)) {
+		loff_t lpos_pt = pos;
+		ssize_t ret = vfs_iter_read(lower, to, &lpos_pt, 0);
+
+		if (ret >= 0) {
+			iocb->ki_pos = lpos_pt;
+			if (lower_inode)
+				cryptfs_copy_attr(upper_inode, lower_inode);
+		}
+		return ret;
+	}
+
 	aligned_start = round_down(pos, CRYPTFS_SECTOR_SIZE);
 	aligned_end   = round_up((u64)pos + count, CRYPTFS_SECTOR_SIZE);
 	aligned_len   = aligned_end - aligned_start;
@@ -210,6 +234,21 @@ static ssize_t cryptfs_write_iter(struct kiocb *iocb, struct iov_iter *from)
 		return -EBADF;
 
 	lower_inode = CRYPTFS_I(upper_inode)->lower_inode;
+
+	if (!cryptfs_should_encrypt(upper)) {
+		loff_t lpos_pt = (upper->f_flags & O_APPEND)
+				 ? i_size_read(upper_inode) : pos;
+		ssize_t ret;
+
+		iocb->ki_pos = lpos_pt;
+		ret = vfs_iter_write(lower, from, &lpos_pt, 0);
+		if (ret >= 0) {
+			iocb->ki_pos = lpos_pt;
+			if (lower_inode)
+				cryptfs_copy_attr(upper_inode, lower_inode);
+		}
+		return ret;
+	}
 
 	if (upper->f_flags & O_APPEND) {
 		pos = i_size_read(upper_inode);
