@@ -108,7 +108,5 @@ sudo rmmod cryptfs
   - Invalid module format / version magic — почти всегда uname -r не совпадает с
    версией, под которую собрали. make clean && make после sudo apt install 
   linux-headers-$(uname -r).                                                    
-  - Любой kernel panic/oops — dmesg даст стек, присылайте его сюда, разберём.
-  Oops от модуля не обязательно ронит систему, но rmmod после этого  асто уже не
-   пройдёт — понадобится ребут.
+  - Любой kernel panic/oops — изучение логов dmesg 
                                                                                 
